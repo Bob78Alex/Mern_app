@@ -4,8 +4,9 @@
   "description": "(Full stack app based on MERN techs)",
   "main": "app.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
+    "start": "node app.js",
+    "server": "nodemon app.js"
+      },
   "keywords": [
     "mern",
     "react"
@@ -15,5 +16,9 @@
   "dependencies": {
     "express": "^4.17.1",
     "mongoose": "^5.12.4"
+  },
+  "devDependencies": {
+    "concurrently": "^6.0.2",
+    "nodemon": "^2.0.7"
   }
 }
