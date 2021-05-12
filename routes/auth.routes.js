@@ -3,6 +3,8 @@ const bcrypt  = require('bcryptjs')
 const {check, validationResult} = require('express-validator')
 const User = require('../models/User')
 const router = Router()
+const config = require('config')
+const jwt = require('jsonwebtoken')
 
 // /api/auth/register
 router.post(
@@ -14,7 +16,7 @@ router.post(
     ],
     async (req, res) => {
     try {
-
+        console.log("Body:", req.body)
         const errors = validationResult(req)
 
         if (!errors.isEmpty()){
@@ -74,6 +76,20 @@ try {
     if (!user) {
         return res.status(400).json({message: 'User was not found'})
     }
+
+    const isMatch = await bcrypt.compare(password, user.password)
+
+    if(!isMatch) {
+        return res.status(400).json({message: 'The password you provided does not match with our records'})
+    }
+
+    const token = jwt.sign(
+        {userId: user.id},
+        config.get('jwtSecret'),
+        {expiresIn: '1h'}
+        )
+
+        res.json({token, userId: userId})
     
 } catch (e) {
     res.status(500).json({message: 'Something went wrong. Try it again.'})
